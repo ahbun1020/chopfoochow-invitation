@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>福州包 · 试营业邀请函</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+    background-color: #f5f0e6;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+  }
+  #envelope {
+    width: 300px;
+    height: 200px;
+    background: url('https://i.imgur.com/gFoMV28.png') no-repeat center/cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+    animation: float 2s ease-in-out infinite;
+    transition: transform 0.2s;
+    z-index: 2;
+  }
+  #envelope:active {
+    transform: scale(0.95);
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  #invitation {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    animation: fadeIn 1s ease forwards;
+    z-index: 2;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #b02a02;
+  }
+  p {
+    font-size: 16px;
+    color: #555;
+    margin: 5px 0;
+  }
+  #hint {
+    display: none;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #999;
+    animation: fadeInHint 1s ease forwards;
+  }
+  @keyframes fadeInHint {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  canvas#confetti-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<audio id="bgm" loop preload="auto">
+  <source src="https://cdn.pixabay.com/audio/2022/03/16/audio_f183f2900e.mp3" type="audio/mpeg">
+</audio>
+
+<div id="envelope" onclick="openInvitation()"></div>
+
+<div id="invitation">
+  <h1>福州包 试营运邀请</h1>
+  <p>日期：5月2日（星期四）</p>
+  <p>地点：福州包（居銮店）</p>
+  <p>时间安排：</p>
+  <p>🍴 8:00am - 12:00pm 包子点心体验</p>
+  <p>🍲 12:00pm - 5:00pm 小火锅体验</p>
+  <div id="hint">🎵 请开启声音，享受完整体验！</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+function openInvitation() {
+  document.getElementById('envelope').style.display = 'none';
+  document.getElementById('invitation').style.display = 'flex';
+
+  var audio = document.getElementById('bgm');
+  audio.muted = false;
+  audio.play();
+
+  document.getElementById('hint').style.display = 'block';
+
+  // 彩纸特效
+  var duration = 2 * 1000;
+  var animationEnd = Date.now() + duration;
+  var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1 };
+
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  var interval = setInterval(function() {
+    var timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    var particleCount = 50 * (timeLeft / duration);
+    confetti(Object.assign({
+      particleCount,
+      origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 }
+    }, defaults));
+  }, 250);
+}
+</script>
+
+</body>
+</html>
