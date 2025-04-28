@@ -62,16 +62,10 @@
     color: #555;
     margin: 5px 0;
   }
-  #hint {
-    display: none;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #999;
-    animation: fadeInHint 1s ease forwards;
-  }
-  @keyframes fadeInHint {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  .notice {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #b02a02;
   }
   canvas#confetti-canvas {
     position: absolute;
@@ -89,19 +83,19 @@
 <canvas id="confetti-canvas"></canvas>
 
 <audio id="bgm" loop preload="auto">
-  <source src="https://cdn.pixabay.com/audio/2022/03/16/audio_f183f2900e.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/16/audio_f183f2900e.mp3?filename=funny-background-music-no-copyright-happy-song-circus-swing-325382.mp3" type="audio/mpeg">
 </audio>
 
 <div id="envelope" onclick="openInvitation()"></div>
 
 <div id="invitation">
-  <h1>福州包 试营运邀请</h1>
-  <p>日期：5月2日（星期四）</p>
+  <h1>福州包试营运邀请</h1>
+  <p>日期：5月2日（星期五）</p>
   <p>地点：福州包（居銮店）</p>
   <p>时间安排：</p>
   <p>🍴 8:00am - 12:00pm 包子点心体验</p>
   <p>🍲 12:00pm - 5:00pm 小火锅体验</p>
-  <div id="hint">🎵 请开启声音，享受完整体验！</div>
+  <p class="notice">如确定出席和出席时间，请告知我</p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -112,11 +106,10 @@ function openInvitation() {
 
   var audio = document.getElementById('bgm');
   audio.muted = false;
-  audio.play();
+  audio.play().catch((err) => {
+    console.log('音乐播放被浏览器阻止，需要用户再点击页面任意处以播放🎵');
+  });
 
-  document.getElementById('hint').style.display = 'block';
-
-  // 彩纸特效
   var duration = 2 * 1000;
   var animationEnd = Date.now() + duration;
   var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1 };
@@ -127,11 +120,9 @@ function openInvitation() {
 
   var interval = setInterval(function() {
     var timeLeft = animationEnd - Date.now();
-
     if (timeLeft <= 0) {
       return clearInterval(interval);
     }
-
     var particleCount = 50 * (timeLeft / duration);
     confetti(Object.assign({
       particleCount,
